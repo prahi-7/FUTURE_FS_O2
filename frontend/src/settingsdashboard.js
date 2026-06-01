@@ -34,7 +34,7 @@ const SettingsDashboard = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.put('http://localhost:5002/api/auth/profile', profileForm, {
+      const response = await axios.put('https://future-fs-o2.onrender.com/api/auth/profile', profileForm, {
         headers: { Authorization: `Bearer ${token}` }
       });
       localStorage.setItem('user', JSON.stringify(response.data));
@@ -60,7 +60,7 @@ const SettingsDashboard = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      await axios.post('http://localhost:5002/api/auth/change-password', {
+      await axios.post('https://future-fs-o2.onrender.com/api/auth/change-password', {
         currentPassword: passwordData.currentPassword,
         newPassword: passwordData.newPassword
       }, {

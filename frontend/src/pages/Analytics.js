@@ -20,10 +20,10 @@ const Analytics = () => {
     try {
       const token = localStorage.getItem('token');
       const [analyticsRes, leadsRes] = await Promise.all([
-        axios.get('http://localhost:5003/api/analytics/dashboard', {
+        axios.get('https://future-fs-o2.onrender.com/api/analytics/dashboard', {
           headers: { Authorization: `Bearer ${token}` }
         }),
-        axios.get('http://localhost:5003/api/leads', {
+        axios.get('https://future-fs-o2.onrender.com/api/leads', {
           headers: { Authorization: `Bearer ${token}` }
         })
       ]);

@@ -24,7 +24,7 @@ const Dashboard = () => {
   const fetchDashboardData = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:5003/api/analytics/dashboard', {
+      const response = await axios.get('https://future-fs-o2.onrender.com/api/analytics/dashboard', {
         headers: { Authorization: `Bearer ${token}` }
       });
       setAnalytics(response.data);

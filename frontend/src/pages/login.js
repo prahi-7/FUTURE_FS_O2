@@ -15,7 +15,7 @@ const Login = () => {
     setLoading(true);
     
     try {
-      const response = await axios.post('http://localhost:5003/api/auth/login', {
+      const response = await axios.post('https://future-fs-o2.onrender.com/api/auth/login', {
         email, password
       });
       

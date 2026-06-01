@@ -12,7 +12,7 @@ const Team = () => {
   const [newMember, setNewMember] = useState({ name: '', email: '', password: '', role: 'rep' });
 
   // Use port 5003 (your backend port)
-  const API_URL = 'http://localhost:5003';
+  const API_URL = 'https://future-fs-o2.onrender.com';
 
   useEffect(() => {
     fetchTeamData();

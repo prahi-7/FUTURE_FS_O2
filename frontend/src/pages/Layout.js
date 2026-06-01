@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { 
   FiHome, FiUsers, FiTrendingUp, FiSettings, 
-  FiLogOut, FiUser, FiPieChart 
+  FiLogOut, FiPieChart 
 } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 

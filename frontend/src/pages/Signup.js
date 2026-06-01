@@ -16,7 +16,7 @@ const Signup = () => {
     setLoading(true);
     
     try {
-      const response = await axios.post('http://localhost:5003/api/auth/signup', {
+      const response = await axios.post('https://future-fs-o2.onrender.com/api/auth/signup', {
         name, email, password
       });
       
@@ -24,8 +24,8 @@ const Signup = () => {
       localStorage.setItem('user', JSON.stringify(response.data.user));
       toast.success('Account created successfully!');
       
-      // Force navigation to dashboard
-      window.location.href = '/dashboard';
+      // FIXED: Using navigate instead of window.location
+      navigate('/dashboard');
       
     } catch (error) {
       console.error('Signup error:', error);

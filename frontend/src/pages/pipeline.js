@@ -24,7 +24,7 @@ const Pipeline = () => {
   const fetchPipeline = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:5003/api/leads', {
+      const response = await axios.get('https://future-fs-o2.onrender.com/api/leads', {
         headers: { Authorization: `Bearer ${token}` }
       });
       
@@ -47,7 +47,7 @@ const Pipeline = () => {
   const updateLeadStatus = async (leadId, newStatus) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.put(`http://localhost:5003/api/leads/${leadId}`, 
+      await axios.put(`https://future-fs-o2.onrender.com/api/leads/${leadId}`, 
         { status: newStatus },
         { headers: { Authorization: `Bearer ${token}` } }
       );
