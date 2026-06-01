@@ -124,7 +124,7 @@ const Team = () => {
       <div className="fade-in">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', flexWrap: 'wrap', gap: '1rem' }}>
           <div>
-            <h1 style={{ fontSize: '2rem', fontWeight: '700', marginBottom: '0.5rem', color: 'white' }}>Team Management</h1>
+            <h1 style={{ fontSize: '2rem', fontWeight: '700', marginBottom: '0.5rem', color: 'black' }}>Team Management</h1>
             <p style={{ color: 'rgba(18, 18, 18, 0.9)' }}>Manage your sales team and track their performance</p>
           </div>
           <button className="btn-primary" onClick={() => setShowAddMember(true)}>
@@ -193,7 +193,7 @@ const Team = () => {
                   <div style={{
                     width: '60px',
                     height: '60px',
-                    background: 'linear-gradient(135deg, #FF6B35, #FF4500)',
+                    background: 'linear-gradient(135deg, #d6c7c1, #e3d8d5)',
                     borderRadius: '16px',
                     display: 'flex',
                     alignItems: 'center',
@@ -227,19 +227,19 @@ const Team = () => {
                 }}>
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1rem', textAlign: 'center' }}>
                     <div>
-                      <div style={{ fontSize: '20px', fontWeight: '700', color: '#FF6B35' }}>
+                      <div style={{ fontSize: '20px', fontWeight: '700', color: '#612ece' }}>
                         {stats.totalLeads}
                       </div>
                       <div style={{ fontSize: '11px', color: '#6B7280' }}>Total Leads</div>
                     </div>
                     <div>
-                      <div style={{ fontSize: '20px', fontWeight: '700', color: '#10B981' }}>
+                      <div style={{ fontSize: '20px', fontWeight: '700', color: '#612ece' }}>
                         {stats.converted}
                       </div>
                       <div style={{ fontSize: '11px', color: '#6B7280' }}>Converted</div>
                     </div>
                     <div>
-                      <div style={{ fontSize: '20px', fontWeight: '700', color: '#F59E0B' }}>
+                      <div style={{ fontSize: '20px', fontWeight: '700', color: '#612ece' }}>
                         {stats.conversionRate}%
                       </div>
                       <div style={{ fontSize: '11px', color: '#6B7280' }}>Conversion</div>
@@ -258,7 +258,7 @@ const Team = () => {
             border: '2px solid rgba(255, 107, 53, 0.3)'
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
-              <FiAward style={{ fontSize: '32px', color: '#F59E0B' }} />
+              <FiAward style={{ fontSize: '32px', color: '#644de4' }} />
               <h3 style={{ fontWeight: '700' }}>🏆 Top Performer</h3>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>

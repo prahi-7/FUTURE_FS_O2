@@ -45,7 +45,7 @@ const Login = () => {
     }}>
       <div className="card" style={{ maxWidth: '450px', width: '100%', padding: '2.5rem' }}>
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-          <h1 style={{ fontSize: '2rem', color: '#e5764e', marginBottom: '0.5rem' }}>MINI CRM</h1>
+          <h1 style={{ fontSize: '2rem', color: '#714ee5', marginBottom: '0.5rem' }}>MINI CRM</h1>
           <p style={{ color: '#0d0e0f' }}>Welcome back! Sign in to your account</p>
         </div>
 
@@ -73,7 +73,7 @@ const Login = () => {
               Password
             </label>
             <div style={{ position: 'relative' }}>
-              <FiLock style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: '#FF6B35' }} />
+              <FiLock style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: '#5950d1' }} />
               <input
                 type="password"
                 className="input-modern"

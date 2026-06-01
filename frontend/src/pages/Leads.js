@@ -208,7 +208,7 @@ const Leads = () => {
       <div className="fade-in">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', flexWrap: 'wrap', gap: '1rem' }}>
           <div>
-            <h1 style={{ fontSize: '2rem', fontWeight: '700', marginBottom: '0.5rem', color: 'white' }}>Leads</h1>
+            <h1 style={{ fontSize: '2rem', fontWeight: '700', marginBottom: '0.5rem', color: 'black' }}>Leads</h1>
             <p style={{ color: 'rgba(11, 11, 11, 0.9)' }}>Manage and track all your sales leads</p>
           </div>
           <button className="btn-primary" onClick={() => setShowModal(true)}>

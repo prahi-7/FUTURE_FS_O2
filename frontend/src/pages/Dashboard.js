@@ -74,7 +74,7 @@ const Dashboard = () => {
           gap: '1rem' 
         }}>
           <div>
-            <h1 style={{ fontSize: 'clamp(1.5rem, 5vw, 2rem)', fontWeight: '700', marginBottom: '0.5rem', color: 'white' }}>
+            <h1 style={{ fontSize: 'clamp(1.5rem, 5vw, 2rem)', fontWeight: '700', marginBottom: '0.5rem', color: 'black' }}>
               Welcome back, {user?.name?.split(' ')[0] || 'User'}! 👋
             </h1>
             <p style={{ color: 'rgba(19, 18, 18, 0.9)', fontSize: 'clamp(0.875rem, 4vw, 1rem)' }}>

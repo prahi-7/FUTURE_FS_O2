@@ -79,7 +79,7 @@ const Analytics = () => {
     <Layout>
       <div className="fade-in">
         <div style={{ marginBottom: '2rem' }}>
-          <h1 style={{ fontSize: '2rem', fontWeight: '700', marginBottom: '0.5rem', color: 'white' }}>
+          <h1 style={{ fontSize: '2rem', fontWeight: '700', marginBottom: '0.5rem', color: 'black' }}>
             Analytics & Insights
           </h1>
           <p style={{ color: 'rgba(16, 15, 15, 0.9)' }}>
@@ -168,25 +168,25 @@ const Analytics = () => {
             gap: '1.5rem'
           }}>
             <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '36px', fontWeight: '700', color: '#FF6B35' }}>
+              <div style={{ fontSize: '36px', fontWeight: '700', color: '#040303' }}>
                 {analytics?.conversionRate || 0}%
               </div>
               <div style={{ fontSize: '14px', color: '#6B7280', marginTop: '8px' }}>Conversion Rate</div>
             </div>
             <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '36px', fontWeight: '700', color: '#FF6B35' }}>
+              <div style={{ fontSize: '36px', fontWeight: '700', color: '#040303' }}>
                 {analytics?.totalLeads || 0}
               </div>
               <div style={{ fontSize: '14px', color: '#6B7280', marginTop: '8px' }}>Total Leads</div>
             </div>
             <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '36px', fontWeight: '700', color: '#FF6B35' }}>
+              <div style={{ fontSize: '36px', fontWeight: '700', color: '#040303' }}>
                 ${((analytics?.pipelineValue || 0) / 1000).toFixed(0)}k
               </div>
               <div style={{ fontSize: '14px', color: '#6B7280', marginTop: '8px' }}>Pipeline Value</div>
             </div>
             <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '36px', fontWeight: '700', color: '#FF6B35' }}>
+              <div style={{ fontSize: '36px', fontWeight: '700', color: '#040303' }}>
                 {analytics?.convertedLeads || 0}
               </div>
               <div style={{ fontSize: '14px', color: '#6B7280', marginTop: '8px' }}>Won Deals</div>

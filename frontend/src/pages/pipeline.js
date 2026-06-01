@@ -93,7 +93,7 @@ const Pipeline = () => {
     <Layout>
       <div className="fade-in">
         <div style={{ marginBottom: '2rem' }}>
-          <h1 style={{ fontSize: '2rem', fontWeight: '700', marginBottom: '0.5rem', color: 'white' }}>
+          <h1 style={{ fontSize: '2rem', fontWeight: '700', marginBottom: '0.5rem', color: 'black' }}>
             Sales Pipeline
           </h1>
           <p style={{ color: 'rgba(14, 14, 14, 0.9)' }}>

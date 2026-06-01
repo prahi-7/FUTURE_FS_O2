@@ -133,7 +133,7 @@ const Settings = () => {
                       gap: '12px',
                       width: '100%',
                       padding: '12px 16px',
-                      background: activeTab === tab.id ? 'linear-gradient(135deg, #FF6B35, #FF4500)' : 'transparent',
+                      background: activeTab === tab.id ? 'linear-gradient(135deg, #081d69, #3d3ac9)' : 'transparent',
                       color: activeTab === tab.id ? 'white' : '#4a5568',
                       border: 'none',
                       borderRadius: '12px',
@@ -157,7 +157,7 @@ const Settings = () => {
               <div className="card">
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '1.5rem' }}>
                   <div style={{ background: '#FF6B3515', padding: '12px', borderRadius: '16px' }}>
-                    <FiUser style={{ fontSize: '24px', color: '#FF6B35' }} />
+                    <FiUser style={{ fontSize: '24px', color: '#1350a5' }} />
                   </div>
                   <div>
                     <h3 style={{ fontWeight: '600' }}>Profile Information</h3>
