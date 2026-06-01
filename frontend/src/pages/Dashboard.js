@@ -28,7 +28,6 @@ const Dashboard = () => {
         headers: { Authorization: `Bearer ${token}` }
       });
       setAnalytics(response.data);
-      console.log('Dashboard data:', response.data);
     } catch (error) {
       console.error('Dashboard error:', error);
       toast.error('Failed to load dashboard data');
@@ -45,7 +44,7 @@ const Dashboard = () => {
   };
 
   const statsCards = [
-    { title: 'Total Leads', value: analytics.totalLeads, icon: FiUsers, color: '#FF6B35' },
+    { title: 'Total Leads', value: analytics.totalLeads, icon: FiUsers, color: '#8B5CF6' },
     { title: 'Pipeline Value', value: `$${analytics.pipelineValue?.toLocaleString() || 0}`, icon: FiDollarSign, color: '#10B981' },
     { title: 'Conversion Rate', value: `${analytics.conversionRate || 0}%`, icon: FiTrendingUp, color: '#F59E0B' },
     { title: 'Converted Leads', value: analytics.convertedLeads, icon: FiCheckCircle, color: '#EF4444' },
@@ -66,53 +65,67 @@ const Dashboard = () => {
   return (
     <Layout>
       <div className="fade-in">
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', flexWrap: 'wrap', gap: '1rem' }}>
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center', 
+          marginBottom: '1.5rem', 
+          flexWrap: 'wrap', 
+          gap: '1rem' 
+        }}>
           <div>
-            <h1 style={{ fontSize: '2rem', fontWeight: '700', marginBottom: '0.5rem', color: 'white' }}>
+            <h1 style={{ fontSize: 'clamp(1.5rem, 5vw, 2rem)', fontWeight: '700', marginBottom: '0.5rem', color: 'white' }}>
               Welcome back, {user?.name?.split(' ')[0] || 'User'}! 👋
             </h1>
-            <p style={{ color: 'rgba(255,255,255,0.9)' }}>
+            <p style={{ color: 'rgba(255,255,255,0.9)', fontSize: 'clamp(0.875rem, 4vw, 1rem)' }}>
               You have {analytics.totalLeads} lead{analytics.totalLeads !== 1 ? 's' : ''} in your pipeline
             </p>
           </div>
-          <button onClick={handleRefresh} className="btn-secondary" style={{ display: 'flex', alignItems: 'center', gap: '8px' }} disabled={refreshing}>
+          <button 
+            onClick={handleRefresh} 
+            className="btn-secondary" 
+            style={{ display: 'flex', alignItems: 'center', gap: '8px' }} 
+            disabled={refreshing}
+          >
             <FiRefreshCw style={{ animation: refreshing ? 'spin 1s linear infinite' : 'none' }} />
             {refreshing ? 'Refreshing...' : 'Refresh'}
           </button>
         </div>
 
+        {/* Stats Grid - Responsive */}
         <div style={{ 
           display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', 
-          gap: '1.5rem',
-          marginBottom: '2rem'
+          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', 
+          gap: '1rem',
+          marginBottom: '1.5rem'
         }}>
           {statsCards.map((stat, index) => {
             const Icon = stat.icon;
             return (
               <div key={index} className="card">
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
                   <div style={{ 
                     background: `${stat.color}15`, 
-                    padding: '12px', 
-                    borderRadius: '16px',
+                    padding: '10px', 
+                    borderRadius: '12px',
                     display: 'inline-flex'
                   }}>
-                    <Icon style={{ color: stat.color, fontSize: '24px' }} />
+                    <Icon style={{ color: stat.color, fontSize: 'clamp(20px, 5vw, 24px)' }} />
                   </div>
                 </div>
-                <h3 style={{ fontSize: '28px', fontWeight: '700', marginBottom: '0.5rem' }}>
+                <h3 style={{ fontSize: 'clamp(22px, 6vw, 28px)', fontWeight: '700', marginBottom: '0.25rem' }}>
                   {stat.value}
                 </h3>
-                <p style={{ color: '#6B7280', fontWeight: '500' }}>{stat.title}</p>
+                <p style={{ color: '#6B7280', fontWeight: '500', fontSize: 'clamp(12px, 3vw, 14px)' }}>{stat.title}</p>
               </div>
             );
           })}
         </div>
 
+        {/* Quick Actions */}
         <div className="card">
-          <h3 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '1rem' }}>Quick Actions</h3>
-          <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+          <h3 style={{ fontSize: 'clamp(16px, 4vw, 18px)', fontWeight: '600', marginBottom: '1rem' }}>Quick Actions</h3>
+          <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
             <button className="btn-primary" onClick={() => window.location.href = '/leads'}>
               Add New Lead
             </button>
@@ -128,6 +141,12 @@ const Dashboard = () => {
           @keyframes spin {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
+          }
+          
+          @media (max-width: 768px) {
+            .card {
+              padding: 1rem;
+            }
           }
         `}
       </style>
