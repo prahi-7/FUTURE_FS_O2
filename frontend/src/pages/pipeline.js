@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { FiMove, FiDollarSign, FiUser } from 'react-icons/fi';
@@ -17,11 +17,7 @@ const Pipeline = () => {
     { id: 'won', name: 'Won', color: '#059669', icon: '🏆' }
   ];
 
-  useEffect(() => {
-    fetchPipeline();
-  }, []);
-
-  const fetchPipeline = async () => {
+  const fetchPipeline = useCallback(async () => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.get('https://future-fs-o2.onrender.com/api/leads', {
@@ -42,7 +38,11 @@ const Pipeline = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchPipeline();
+  }, [fetchPipeline]);
 
   const updateLeadStatus = async (leadId, newStatus) => {
     try {
@@ -93,10 +93,10 @@ const Pipeline = () => {
     <Layout>
       <div className="fade-in">
         <div style={{ marginBottom: '2rem' }}>
-          <h1 style={{ fontSize: '2rem', fontWeight: '700', marginBottom: '0.5rem' }}>
+          <h1 style={{ fontSize: '2rem', fontWeight: '700', marginBottom: '0.5rem', color: 'white' }}>
             Sales Pipeline
           </h1>
-          <p style={{ color: '#f1f5fd' }}>
+          <p style={{ color: 'rgba(255,255,255,0.9)' }}>
             Drag and drop leads to move them through your sales stages
           </p>
         </div>
