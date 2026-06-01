@@ -158,7 +158,7 @@ const Team = () => {
               </div>
               <div>
                 <div style={{ fontSize: '28px', fontWeight: '700' }}>{totalTeamLeads}</div>
-                <div style={{ fontSize: '14px', color: '#6B7280' }}>Total Team Leads</div>
+                <div style={{ fontSize: '14px', color: '#090a0c' }}>Total Team Leads</div>
               </div>
             </div>
           </div>

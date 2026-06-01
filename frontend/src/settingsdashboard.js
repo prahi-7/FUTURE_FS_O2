@@ -78,9 +78,9 @@ const SettingsDashboard = () => {
   const handleThemeChange = (newTheme) => {
     setTheme(newTheme);
     if (newTheme === 'light') {
-      document.body.style.background = 'linear-gradient(135deg, #FF6B35 0%, #F7931E 50%, #FF4500 100%)';
+      document.body.style.background = 'linear-gradient(135deg, #b5b7dd 0%, #ae95d6 50%, #FF4500 100%)';
     } else {
-      document.body.style.background = 'linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)';
+      document.body.style.background = 'linear-gradient(135deg, #6363e6 0%, #3164f0 100%)';
     }
     toast.success(`${newTheme === 'light' ? 'Light' : 'Dark'} theme activated`);
   };
@@ -151,7 +151,7 @@ const SettingsDashboard = () => {
           {/* Notification Settings */}
           <div className="card">
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '1.5rem' }}>
-              <FiBell style={{ fontSize: '24px', color: '#FF6B35' }} />
+              <FiBell style={{ fontSize: '24px', color: '#632ebd' }} />
               <h3 style={{ fontWeight: '600' }}>Notifications</h3>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -173,7 +173,7 @@ const SettingsDashboard = () => {
           {/* Appearance Settings */}
           <div className="card">
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '1.5rem' }}>
-              <FiSun style={{ fontSize: '24px', color: '#FF6B35' }} />
+              <FiSun style={{ fontSize: '24px', color: '#a5b1e4' }} />
               <h3 style={{ fontWeight: '600' }}>Appearance</h3>
             </div>
             <div style={{ display: 'flex', gap: '1rem' }}>
@@ -189,14 +189,14 @@ const SettingsDashboard = () => {
           {/* Data Management */}
           <div className="card">
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '1.5rem' }}>
-              <FiDatabase style={{ fontSize: '24px', color: '#FF6B35' }} />
+              <FiDatabase style={{ fontSize: '24px', color: '#6172f3' }} />
               <h3 style={{ fontWeight: '600' }}>Data Management</h3>
             </div>
             <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
               <button className="btn-secondary" onClick={() => toast.info('Export feature coming soon')}>
                 <FiDownload /> Export All Data
               </button>
-              <button className="btn-secondary" style={{ color: '#EF4444' }} onClick={() => toast.error('Delete account feature coming soon')}>
+              <button className="btn-secondary" style={{ color: '#795ae7' }} onClick={() => toast.error('Delete account feature coming soon')}>
                 <FiTrash2 /> Delete Account
               </button>
             </div>
