@@ -81,7 +81,7 @@ const Team = () => {
     const roles = {
       admin: { color: '#8B5CF6', label: 'Admin', bg: '#8B5CF615' },
       manager: { color: '#10B981', label: 'Manager', bg: '#10B98115' },
-      rep: { color: '#F59E0B', label: 'Sales Rep', bg: '#F59E0B15' }
+      rep: { color: '#ae48e9', label: 'Sales Rep', bg: '#F59E0B15' }
     };
     const roleInfo = roles[role] || roles.rep;
     return (
@@ -147,7 +147,7 @@ const Team = () => {
               </div>
               <div>
                 <div style={{ fontSize: '28px', fontWeight: '700' }}>{members.length}</div>
-                <div style={{ fontSize: '14px', color: '#6B7280' }}>Team Members</div>
+                <div style={{ fontSize: '14px', color: '#070708' }}>Team Members</div>
               </div>
             </div>
           </div>
@@ -165,7 +165,7 @@ const Team = () => {
           <div className="card">
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <div style={{ background: '#F59E0B15', padding: '12px', borderRadius: '16px' }}>
-                <FiAward style={{ fontSize: '28px', color: '#F59E0B' }} />
+                <FiAward style={{ fontSize: '28px', color: '#3d33bc' }} />
               </div>
               <div>
                 <div style={{ fontSize: '28px', fontWeight: '700' }}>{teamConversionRate}%</div>

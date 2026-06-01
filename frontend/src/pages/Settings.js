@@ -113,7 +113,7 @@ const Settings = () => {
     <Layout>
       <div className="fade-in">
         <div style={{ marginBottom: '2rem' }}>
-          <h1 style={{ fontSize: '2rem', fontWeight: '700', marginBottom: '0.5rem', color: 'white' }}>Settings</h1>
+          <h1 style={{ fontSize: '2rem', fontWeight: '700', marginBottom: '0.5rem', color: 'black' }}>Settings</h1>
           <p style={{ color: 'rgba(25, 23, 23, 0.9)' }}>Manage your account preferences and security settings</p>
         </div>
 
