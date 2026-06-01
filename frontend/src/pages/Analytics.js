@@ -82,7 +82,7 @@ const Analytics = () => {
           <h1 style={{ fontSize: '2rem', fontWeight: '700', marginBottom: '0.5rem', color: 'white' }}>
             Analytics & Insights
           </h1>
-          <p style={{ color: 'rgba(255,255,255,0.9)' }}>
+          <p style={{ color: 'rgba(16, 15, 15, 0.9)' }}>
             Track your sales performance and lead conversion metrics
           </p>
         </div>

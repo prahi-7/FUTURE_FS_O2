@@ -96,7 +96,7 @@ const Pipeline = () => {
           <h1 style={{ fontSize: '2rem', fontWeight: '700', marginBottom: '0.5rem', color: 'white' }}>
             Sales Pipeline
           </h1>
-          <p style={{ color: 'rgba(255,255,255,0.9)' }}>
+          <p style={{ color: 'rgba(14, 14, 14, 0.9)' }}>
             Drag and drop leads to move them through your sales stages
           </p>
         </div>

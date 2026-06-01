@@ -114,7 +114,7 @@ const Settings = () => {
       <div className="fade-in">
         <div style={{ marginBottom: '2rem' }}>
           <h1 style={{ fontSize: '2rem', fontWeight: '700', marginBottom: '0.5rem', color: 'white' }}>Settings</h1>
-          <p style={{ color: 'rgba(255,255,255,0.9)' }}>Manage your account preferences and security settings</p>
+          <p style={{ color: 'rgba(25, 23, 23, 0.9)' }}>Manage your account preferences and security settings</p>
         </div>
 
         <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
@@ -262,7 +262,7 @@ const Settings = () => {
                       }}
                       style={{
                         padding: '8px 16px',
-                        background: twoFactorEnabled ? '#10B981' : '#FF6B35',
+                        background: twoFactorEnabled ? '#10B981' : '#ed9677',
                         color: 'white',
                         border: 'none',
                         borderRadius: '12px',
@@ -282,7 +282,7 @@ const Settings = () => {
               <div className="card">
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '1.5rem' }}>
                   <div style={{ background: '#FF6B3515', padding: '12px', borderRadius: '16px' }}>
-                    <FiBell style={{ fontSize: '24px', color: '#FF6B35' }} />
+                    <FiBell style={{ fontSize: '24px', color: '#f29776' }} />
                   </div>
                   <div>
                     <h3 style={{ fontWeight: '600' }}>Notification Preferences</h3>
@@ -343,7 +343,7 @@ const Settings = () => {
               <div className="card">
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '1.5rem' }}>
                   <div style={{ background: '#FF6B3515', padding: '12px', borderRadius: '16px' }}>
-                    <FiDatabase style={{ fontSize: '24px', color: '#FF6B35' }} />
+                    <FiDatabase style={{ fontSize: '24px', color: '#de957b' }} />
                   </div>
                   <div>
                     <h3 style={{ fontWeight: '600' }}>Data & Privacy</h3>
@@ -354,7 +354,7 @@ const Settings = () => {
                   <button className="btn-secondary" onClick={() => toast.info('Export feature coming soon')}>
                     <FiDownload /> Export All Data
                   </button>
-                  <button className="btn-secondary" style={{ color: '#EF4444' }} onClick={() => {
+                  <button className="btn-secondary" style={{ color: '#f08080' }} onClick={() => {
                     if (window.confirm('Are you sure you want to delete your account? This action cannot be undone!')) {
                       toast.error('Delete account feature coming soon');
                     }

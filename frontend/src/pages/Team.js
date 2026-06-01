@@ -125,7 +125,7 @@ const Team = () => {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', flexWrap: 'wrap', gap: '1rem' }}>
           <div>
             <h1 style={{ fontSize: '2rem', fontWeight: '700', marginBottom: '0.5rem', color: 'white' }}>Team Management</h1>
-            <p style={{ color: 'rgba(255,255,255,0.9)' }}>Manage your sales team and track their performance</p>
+            <p style={{ color: 'rgba(18, 18, 18, 0.9)' }}>Manage your sales team and track their performance</p>
           </div>
           <button className="btn-primary" onClick={() => setShowAddMember(true)}>
             <FiUserPlus style={{ marginRight: '8px', verticalAlign: 'middle' }} />

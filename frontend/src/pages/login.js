@@ -45,8 +45,8 @@ const Login = () => {
     }}>
       <div className="card" style={{ maxWidth: '450px', width: '100%', padding: '2.5rem' }}>
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-          <h1 style={{ fontSize: '2rem', color: '#FF6B35', marginBottom: '0.5rem' }}>MINI CRM</h1>
-          <p style={{ color: '#6B7280' }}>Welcome back! Sign in to your account</p>
+          <h1 style={{ fontSize: '2rem', color: '#e5764e', marginBottom: '0.5rem' }}>MINI CRM</h1>
+          <p style={{ color: '#0d0e0f' }}>Welcome back! Sign in to your account</p>
         </div>
 
         <form onSubmit={handleSubmit}>
@@ -94,7 +94,7 @@ const Login = () => {
 
         <p style={{ textAlign: 'center', marginTop: '1.5rem', color: '#6B7280' }}>
           Don't have an account?{' '}
-          <Link to="/signup" style={{ color: '#FF6B35', textDecoration: 'none', fontWeight: '600' }}>
+          <Link to="/signup" style={{ color: '#eda88f', textDecoration: 'none', fontWeight: '600' }}>
             Create account
           </Link>
         </p>
