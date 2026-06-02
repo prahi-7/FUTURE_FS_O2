@@ -106,16 +106,26 @@ const Team = () => {
   const sortedPerformance = [...performance].sort((a, b) => (b.stats?.totalLeads || 0) - (a.stats?.totalLeads || 0));
   const topPerformer = sortedPerformance[0];
 
-  const textColor = isDarkTheme ? '#ffffff' : '#1a1f36';
-  const subTextColor = isDarkTheme ? 'rgba(255,255,255,0.7)' : '#6B7280';
+  // Dynamic text colors based on theme
+  const pageTitleColor = isDarkTheme ? '#ffffff' : '#1a1f36';
+  const pageSubtitleColor = isDarkTheme ? 'rgba(255,255,255,0.8)' : '#4a5568';
+  const statValueColor = isDarkTheme ? '#ffffff' : '#1a1f36';
+  const statLabelColor = isDarkTheme ? 'rgba(255,255,255,0.7)' : '#6B7280';
+  const memberNameColor = isDarkTheme ? '#ffffff' : '#1a1f36';
+  const memberEmailColor = isDarkTheme ? 'rgba(255,255,255,0.6)' : '#6B7280';
+  const sectionTitleColor = isDarkTheme ? '#ffffff' : '#1a1f36';
 
   return (
     <Layout>
       <div className="fade-in">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', flexWrap: 'wrap', gap: '1rem' }}>
           <div>
-            <h1 style={{ fontSize: '2rem', fontWeight: '700', marginBottom: '0.5rem', color: 'white' }}>Team Management</h1>
-            <p style={{ color: 'rgba(255,255,255,0.9)' }}>Manage your sales team and track their performance</p>
+            <h1 style={{ fontSize: '2rem', fontWeight: '700', marginBottom: '0.5rem', color: pageTitleColor }}>
+              Team Management
+            </h1>
+            <p style={{ color: pageSubtitleColor }}>
+              Manage your sales team and track their performance
+            </p>
           </div>
           <button className="btn-primary" onClick={() => setShowAddMember(true)}>
             <FiUserPlus style={{ marginRight: '8px', verticalAlign: 'middle' }} />
@@ -123,6 +133,7 @@ const Team = () => {
           </button>
         </div>
 
+        {/* Stats Cards */}
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
@@ -135,8 +146,8 @@ const Team = () => {
                 <FiUsers style={{ fontSize: '28px', color: '#FF6B35' }} />
               </div>
               <div>
-                <div style={{ fontSize: '28px', fontWeight: '700', color: textColor }}>{members.length}</div>
-                <div style={{ fontSize: '14px', color: subTextColor }}>Team Members</div>
+                <div style={{ fontSize: '28px', fontWeight: '700', color: statValueColor }}>{members.length}</div>
+                <div style={{ fontSize: '14px', color: statLabelColor }}>Team Members</div>
               </div>
             </div>
           </div>
@@ -146,8 +157,8 @@ const Team = () => {
                 <FiTrendingUp style={{ fontSize: '28px', color: '#10B981' }} />
               </div>
               <div>
-                <div style={{ fontSize: '28px', fontWeight: '700', color: textColor }}>{totalTeamLeads}</div>
-                <div style={{ fontSize: '14px', color: subTextColor }}>Total Team Leads</div>
+                <div style={{ fontSize: '28px', fontWeight: '700', color: statValueColor }}>{totalTeamLeads}</div>
+                <div style={{ fontSize: '14px', color: statLabelColor }}>Total Team Leads</div>
               </div>
             </div>
           </div>
@@ -157,14 +168,19 @@ const Team = () => {
                 <FiAward style={{ fontSize: '28px', color: '#F59E0B' }} />
               </div>
               <div>
-                <div style={{ fontSize: '28px', fontWeight: '700', color: textColor }}>{teamConversionRate}%</div>
-                <div style={{ fontSize: '14px', color: subTextColor }}>Team Conversion Rate</div>
+                <div style={{ fontSize: '28px', fontWeight: '700', color: statValueColor }}>{teamConversionRate}%</div>
+                <div style={{ fontSize: '14px', color: statLabelColor }}>Team Conversion Rate</div>
               </div>
             </div>
           </div>
         </div>
 
-        <h3 style={{ fontWeight: '600', marginBottom: '1rem', color: 'white' }}>Team Members</h3>
+        {/* Section Title */}
+        <h3 style={{ fontWeight: '600', marginBottom: '1rem', color: sectionTitleColor }}>
+          Team Members
+        </h3>
+
+        {/* Team Members Grid */}
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(350px, 1fr))',
@@ -195,18 +211,19 @@ const Team = () => {
                   <div style={{ flex: 1 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'start', marginBottom: '8px' }}>
                       <div>
-                        <h3 style={{ fontWeight: '600', fontSize: '18px', margin: 0, color: textColor }}>{member.name}</h3>
+                        <h3 style={{ fontWeight: '600', fontSize: '18px', margin: 0, color: memberNameColor }}>{member.name}</h3>
                         {getRoleBadge(member.role)}
                       </div>
                     </div>
                     <div style={{ display: 'flex', gap: '12px', fontSize: '13px', marginTop: '8px' }}>
-                      <span style={{ display: 'flex', alignItems: 'center', gap: '4px', color: subTextColor }}>
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '4px', color: memberEmailColor }}>
                         <FiMail size={12} /> {member.email}
                       </span>
                     </div>
                   </div>
                 </div>
 
+                {/* Performance Stats */}
                 <div style={{
                   borderTop: `1px solid ${isDarkTheme ? 'rgba(255,255,255,0.1)' : '#E2E8F0'}`,
                   paddingTop: '1rem',
@@ -217,19 +234,19 @@ const Team = () => {
                       <div style={{ fontSize: '20px', fontWeight: '700', color: '#FF6B35' }}>
                         {stats.totalLeads}
                       </div>
-                      <div style={{ fontSize: '11px', color: subTextColor }}>Total Leads</div>
+                      <div style={{ fontSize: '11px', color: statLabelColor }}>Total Leads</div>
                     </div>
                     <div>
                       <div style={{ fontSize: '20px', fontWeight: '700', color: '#10B981' }}>
                         {stats.converted}
                       </div>
-                      <div style={{ fontSize: '11px', color: subTextColor }}>Converted</div>
+                      <div style={{ fontSize: '11px', color: statLabelColor }}>Converted</div>
                     </div>
                     <div>
                       <div style={{ fontSize: '20px', fontWeight: '700', color: '#F59E0B' }}>
                         {stats.conversionRate}%
                       </div>
-                      <div style={{ fontSize: '11px', color: subTextColor }}>Conversion</div>
+                      <div style={{ fontSize: '11px', color: statLabelColor }}>Conversion</div>
                     </div>
                   </div>
                   {stats.totalValue > 0 && (
@@ -243,7 +260,7 @@ const Team = () => {
                       fontWeight: '600',
                       color: '#10B981'
                     }}>
-                      Total Value: ${stats.totalValue.toLocaleString()}
+                      💰 Total Value: ${stats.totalValue.toLocaleString()}
                     </div>
                   )}
                 </div>
@@ -252,6 +269,7 @@ const Team = () => {
           })}
         </div>
 
+        {/* Top Performer Spotlight */}
         {topPerformer && topPerformer.stats?.totalLeads > 0 && (
           <div className="card" style={{
             background: isDarkTheme ? 'rgba(139, 92, 246, 0.15)' : 'linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(255, 69, 0, 0.05))',
@@ -259,39 +277,40 @@ const Team = () => {
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
               <FiAward style={{ fontSize: '32px', color: '#F59E0B' }} />
-              <h3 style={{ fontWeight: '700', color: textColor }}>🏆 Top Performer</h3>
+              <h3 style={{ fontWeight: '700', color: memberNameColor }}>🏆 Top Performer</h3>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
               <div>
-                <div style={{ fontSize: '20px', fontWeight: '700', marginBottom: '4px', color: textColor }}>
+                <div style={{ fontSize: '20px', fontWeight: '700', marginBottom: '4px', color: memberNameColor }}>
                   {topPerformer.user?.name}
                 </div>
-                <div style={{ fontSize: '14px', color: subTextColor }}>{topPerformer.user?.role || 'Sales Rep'}</div>
+                <div style={{ fontSize: '14px', color: statLabelColor }}>{topPerformer.user?.role || 'Sales Rep'}</div>
               </div>
               <div style={{ display: 'flex', gap: '2rem' }}>
                 <div>
                   <div style={{ fontSize: '24px', fontWeight: '700', color: '#FF6B35' }}>
                     {topPerformer.stats?.totalLeads || 0}
                   </div>
-                  <div style={{ fontSize: '12px', color: subTextColor }}>Leads</div>
+                  <div style={{ fontSize: '12px', color: statLabelColor }}>Leads</div>
                 </div>
                 <div>
                   <div style={{ fontSize: '24px', fontWeight: '700', color: '#10B981' }}>
                     {topPerformer.stats?.conversionRate || 0}%
                   </div>
-                  <div style={{ fontSize: '12px', color: subTextColor }}>Conversion</div>
+                  <div style={{ fontSize: '12px', color: statLabelColor }}>Conversion</div>
                 </div>
                 <div>
                   <div style={{ fontSize: '24px', fontWeight: '700', color: '#F59E0B' }}>
                     ${((topPerformer.stats?.totalValue || 0) / 1000).toFixed(0)}k
                   </div>
-                  <div style={{ fontSize: '12px', color: subTextColor }}>Value</div>
+                  <div style={{ fontSize: '12px', color: statLabelColor }}>Value</div>
                 </div>
               </div>
             </div>
           </div>
         )}
 
+        {/* Add Member Modal */}
         {showAddMember && (
           <div style={{
             position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
@@ -300,8 +319,8 @@ const Team = () => {
           }}>
             <div className="card" style={{ maxWidth: '500px', width: '90%' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-                <h2 style={{ color: textColor }}>Add Team Member</h2>
-                <button onClick={() => setShowAddMember(false)} style={{ background: 'none', border: 'none', fontSize: '24px', cursor: 'pointer', color: textColor }}>✕</button>
+                <h2 style={{ color: memberNameColor }}>Add Team Member</h2>
+                <button onClick={() => setShowAddMember(false)} style={{ background: 'none', border: 'none', fontSize: '24px', cursor: 'pointer', color: memberNameColor }}>✕</button>
               </div>
               <form onSubmit={handleAddMember}>
                 <input
