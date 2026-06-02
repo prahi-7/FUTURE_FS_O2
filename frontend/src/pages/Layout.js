@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { 
   FiHome, FiUsers, FiTrendingUp, FiSettings, 
@@ -10,7 +10,25 @@ const Layout = ({ children }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [user] = useState(JSON.parse(localStorage.getItem('user') || '{}'));
+  const [user, setUser] = useState(null);
+  const [isDarkTheme, setIsDarkTheme] = useState(false);
+
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem('user') || '{}');
+    setUser(userData);
+    
+    // Check current theme
+    const isDark = document.body.classList.contains('dark-theme');
+    setIsDarkTheme(isDark);
+    
+    // Watch for theme changes
+    const observer = new MutationObserver(() => {
+      setIsDarkTheme(document.body.classList.contains('dark-theme'));
+    });
+    observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    
+    return () => observer.disconnect();
+  }, []);
 
   const menuItems = [
     { path: '/dashboard', label: 'Dashboard', icon: FiHome },
@@ -31,6 +49,48 @@ const Layout = ({ children }) => {
   const closeSidebar = () => {
     setSidebarOpen(false);
   };
+
+  // Dynamic styles based on theme
+  const sidebarStyle = {
+    width: '280px',
+    background: isDarkTheme 
+      ? 'rgba(20, 20, 40, 0.95)' 
+      : 'rgba(255, 255, 255, 0.95)',
+    backdropFilter: 'blur(10px)',
+    borderRight: `1px solid ${isDarkTheme ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)'}`,
+    padding: '2rem 1.5rem',
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    height: '100vh',
+    overflowY: 'auto',
+    zIndex: 1000,
+    display: 'flex',
+    flexDirection: 'column',
+    transition: 'transform 0.3s ease'
+  };
+
+  const getMenuItemStyle = (isActive) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: '12px',
+    padding: '12px 16px',
+    margin: '4px 0',
+    borderRadius: '12px',
+    textDecoration: 'none',
+    color: isActive 
+      ? (isDarkTheme ? '#8B5CF6' : '#6D28D9')
+      : (isDarkTheme ? 'rgba(255, 255, 255, 0.7)' : '#4A5568'),
+    background: isActive 
+      ? (isDarkTheme ? 'rgba(139, 92, 246, 0.2)' : 'linear-gradient(135deg, rgba(139, 92, 246, 0.12) 0%, rgba(107, 70, 193, 0.08) 100%)')
+      : 'transparent',
+    fontWeight: isActive ? '600' : '500',
+    transition: 'all 0.2s ease'
+  });
+
+  const logoColor = isDarkTheme ? '#8B5CF6' : '#6D28D9';
+  const textColor = isDarkTheme ? 'white' : '#1a1f36';
+  const subTextColor = isDarkTheme ? 'rgba(255,255,255,0.6)' : '#9CA3AF';
 
   return (
     <div style={{ display: 'flex', minHeight: '100vh' }}>
@@ -59,27 +119,12 @@ const Layout = ({ children }) => {
       {/* Sidebar */}
       <div 
         className={sidebarOpen ? 'sidebar-desktop open' : 'sidebar-desktop'}
-        style={{
-          width: '280px',
-          background: 'rgba(255, 255, 255, 0.95)',
-          backdropFilter: 'blur(10px)',
-          borderRight: '1px solid rgba(0, 0, 0, 0.05)',
-          padding: '2rem 1.5rem',
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          height: '100vh',
-          overflowY: 'auto',
-          zIndex: 1000,
-          display: 'flex',
-          flexDirection: 'column',
-          transition: 'transform 0.3s ease'
-        }}
+        style={sidebarStyle}
       >
         {/* Logo */}
         <div style={{ marginBottom: '2rem', textAlign: 'center' }}>
-          <h2 style={{ color: '#6D28D9', fontSize: '24px', fontWeight: '700' }}>LeadNest</h2>
-          <p style={{ color: '#9CA3AF', fontSize: '12px' }}>Premium CRM</p>
+          <h2 style={{ color: logoColor, fontSize: '24px', fontWeight: '700' }}>LeadNest</h2>
+          <p style={{ color: subTextColor, fontSize: '12px' }}>Premium CRM</p>
         </div>
 
         {/* Menu */}
@@ -92,19 +137,7 @@ const Layout = ({ children }) => {
                 key={item.path}
                 to={item.path}
                 onClick={closeSidebar}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '12px',
-                  padding: '12px 16px',
-                  margin: '4px 0',
-                  borderRadius: '12px',
-                  textDecoration: 'none',
-                  color: isActive ? '#6D28D9' : '#4A5568',
-                  background: isActive ? 'linear-gradient(135deg, rgba(139, 92, 246, 0.12) 0%, rgba(107, 70, 193, 0.08) 100%)' : 'transparent',
-                  fontWeight: isActive ? '600' : '500',
-                  transition: 'all 0.2s ease'
-                }}
+                style={getMenuItemStyle(isActive)}
               >
                 <Icon size={20} />
                 <span>{item.label}</span>
@@ -117,7 +150,7 @@ const Layout = ({ children }) => {
         <div style={{
           marginTop: 'auto',
           paddingTop: '1rem',
-          borderTop: '1px solid rgba(0, 0, 0, 0.05)'
+          borderTop: `1px solid ${isDarkTheme ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)'}`
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '1rem' }}>
             <div style={{
@@ -135,8 +168,8 @@ const Layout = ({ children }) => {
               {user?.name?.charAt(0) || 'U'}
             </div>
             <div style={{ flex: 1, overflow: 'hidden' }}>
-              <p style={{ fontWeight: '600', fontSize: '14px', margin: 0 }}>{user?.name || 'User'}</p>
-              <p style={{ fontSize: '11px', color: '#9CA3AF', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              <p style={{ fontWeight: '600', fontSize: '14px', margin: 0, color: textColor }}>{user?.name || 'User'}</p>
+              <p style={{ fontSize: '11px', color: subTextColor, margin: 0, overflow: 'hidden', textOverflow: 'ellipsis' }}>
                 {user?.email || 'user@example.com'}
               </p>
             </div>
@@ -146,9 +179,9 @@ const Layout = ({ children }) => {
             style={{
               width: '100%',
               padding: '10px',
-              background: 'rgba(239, 68, 68, 0.1)',
+              background: isDarkTheme ? 'rgba(239, 68, 68, 0.15)' : 'rgba(239, 68, 68, 0.1)',
               color: '#EF4444',
-              border: '1px solid rgba(239, 68, 68, 0.2)',
+              border: `1px solid ${isDarkTheme ? 'rgba(239, 68, 68, 0.3)' : 'rgba(239, 68, 68, 0.2)'}`,
               borderRadius: '12px',
               fontWeight: '600',
               cursor: 'pointer',

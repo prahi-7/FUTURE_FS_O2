@@ -16,20 +16,28 @@ const Signup = () => {
     setLoading(true);
     
     try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000);
+      
       const response = await axios.post('https://future-fs-o2.onrender.com/api/auth/signup', {
         name, email, password
+      }, {
+        signal: controller.signal
       });
+      
+      clearTimeout(timeoutId);
       
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('user', JSON.stringify(response.data.user));
       toast.success('Account created successfully!');
-      
-      // FIXED: Using navigate instead of window.location
       navigate('/dashboard');
       
     } catch (error) {
-      console.error('Signup error:', error);
-      toast.error(error.response?.data?.error || 'Signup failed');
+      if (error.name === 'AbortError') {
+        toast.error('Request timeout. Please try again.');
+      } else {
+        toast.error(error.response?.data?.error || 'Signup failed');
+      }
     } finally {
       setLoading(false);
     }
@@ -46,7 +54,7 @@ const Signup = () => {
     }}>
       <div className="card" style={{ maxWidth: '450px', width: '100%', padding: '2.5rem' }}>
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-          <h1 style={{ fontSize: '2rem', color: '#6D28D9', marginBottom: '0.5rem' }}>MINI CRM</h1>
+          <h1 style={{ fontSize: '2rem', color: '#8B5CF6', marginBottom: '0.5rem' }}>LeadNest CRM</h1>
           <p style={{ color: '#6B7280' }}>Create your free account</p>
         </div>
 
@@ -56,7 +64,7 @@ const Signup = () => {
               Full Name
             </label>
             <div style={{ position: 'relative' }}>
-              <FiUser style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: '#9CA3AF' }} />
+              <FiUser style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: '#8B5CF6' }} />
               <input
                 type="text"
                 className="input-modern"
@@ -74,7 +82,7 @@ const Signup = () => {
               Email Address
             </label>
             <div style={{ position: 'relative' }}>
-              <FiMail style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: '#9CA3AF' }} />
+              <FiMail style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: '#8B5CF6' }} />
               <input
                 type="email"
                 className="input-modern"
@@ -92,7 +100,7 @@ const Signup = () => {
               Password
             </label>
             <div style={{ position: 'relative' }}>
-              <FiLock style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: '#9CA3AF' }} />
+              <FiLock style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: '#8B5CF6' }} />
               <input
                 type="password"
                 className="input-modern"
