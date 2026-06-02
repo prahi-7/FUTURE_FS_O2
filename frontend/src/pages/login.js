@@ -9,31 +9,43 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setLoading(true);
+  
+  try {
+    // Add timeout to prevent long waiting
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
     
-    try {
-      const response = await axios.post('https://future-fs-o2.onrender.com/api/auth/login', {
-        email, password
-      });
-      
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('user', JSON.stringify(response.data.user));
-      toast.success('Welcome back!');
-      
+    const response = await axios.post('https://future-fs-o2.onrender.com/api/auth/login', {
+      email, password
+    }, {
+      signal: controller.signal
+    });
+    
+    clearTimeout(timeoutId);
+    
+    localStorage.setItem('token', response.data.token);
+    localStorage.setItem('user', JSON.stringify(response.data.user));
+    toast.success('Welcome back!');
+    navigate('/dashboard');
+    
+  } catch (error) {
+    if (error.name === 'AbortError') {
+      toast.error('Request timeout. Please try again.');
+    } else {
+      toast.error(error.response?.data?.error || 'Login failed');
+    }
+  } finally {
+    setLoading(false);
+  }
+};
+  
       // USE the navigate function (this fixes the warning)
       navigate('/dashboard');
       
-    } catch (error) {
-      console.error('Login error:', error);
-      toast.error(error.response?.data?.error || 'Login failed');
-    } finally {
-      setLoading(false);
-    }
-  };
-
+    
   return (
     <div style={{
       minHeight: '100vh',
