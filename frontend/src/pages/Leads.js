@@ -16,7 +16,8 @@ const Leads = () => {
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
   const [openStatusDropdown, setOpenStatusDropdown] = useState(null);
-
+  const [isDarkTheme, setIsDarkTheme] = useState(false);
+  
   const [formData, setFormData] = useState({
     firstName: '', lastName: '', email: '', phone: '', company: '', 
     jobTitle: '', value: 0, status: 'new', priority: 'medium', leadSource: 'website'
@@ -30,6 +31,7 @@ const Leads = () => {
       icon: FiStar, 
       color: '#0284C7', 
       bgColor: '#E0F2FE',
+      darkBgColor: '#0284C730',
       description: 'Just entered the pipeline',
       gradient: 'linear-gradient(135deg, #0284C7, #0369A1)'
     },
@@ -39,6 +41,7 @@ const Leads = () => {
       icon: FiMessageCircle, 
       color: '#D97706', 
       bgColor: '#FEF3C7',
+      darkBgColor: '#D9770630',
       description: 'Initial contact made',
       gradient: 'linear-gradient(135deg, #D97706, #B45309)'
     },
@@ -48,6 +51,7 @@ const Leads = () => {
       icon: FiUserCheck, 
       color: '#4338CA', 
       bgColor: '#E0E7FF',
+      darkBgColor: '#4338CA30',
       description: 'Validated as potential customer',
       gradient: 'linear-gradient(135deg, #4338CA, #3730A3)'
     },
@@ -57,6 +61,7 @@ const Leads = () => {
       icon: FiFileText, 
       color: '#DB2777', 
       bgColor: '#FCE7F3',
+      darkBgColor: '#DB277730',
       description: 'Quote/proposal delivered',
       gradient: 'linear-gradient(135deg, #DB2777, #BE185D)'
     },
@@ -66,6 +71,7 @@ const Leads = () => {
       icon: FiBriefcase, 
       color: '#854D0E', 
       bgColor: '#FEF08A',
+      darkBgColor: '#854D0E30',
       description: 'Discussing terms',
       gradient: 'linear-gradient(135deg, #854D0E, #713F12)'
     },
@@ -75,6 +81,7 @@ const Leads = () => {
       icon: FiAward, 
       color: '#059669', 
       bgColor: '#D1FAE5',
+      darkBgColor: '#05966930',
       description: 'Deal closed successfully',
       gradient: 'linear-gradient(135deg, #059669, #047857)'
     },
@@ -84,18 +91,34 @@ const Leads = () => {
       icon: FiXCircle, 
       color: '#DC2626', 
       bgColor: '#FEE2E2',
+      darkBgColor: '#DC262630',
       description: 'Deal lost to competition',
       gradient: 'linear-gradient(135deg, #DC2626, #B91C1C)'
     }
   ];
 
-  // Priority Options
+  // Priority Options with dark mode support
   const priorityOptions = [
-    { value: 'low', label: 'Low', color: '#10B981', bgColor: '#D1FAE5' },
-    { value: 'medium', label: 'Medium', color: '#F59E0B', bgColor: '#FEF3C7' },
-    { value: 'high', label: 'High', color: '#F97316', bgColor: '#FFEDD5' },
-    { value: 'urgent', label: 'Urgent', color: '#EF4444', bgColor: '#FEE2E2' }
+    { value: 'low', label: 'Low', color: '#10B981', bgColor: '#D1FAE5', darkBgColor: '#10B98120', icon: '🟢' },
+    { value: 'medium', label: 'Medium', color: '#F59E0B', bgColor: '#FEF3C7', darkBgColor: '#F59E0B20', icon: '🟡' },
+    { value: 'high', label: 'High', color: '#F97316', bgColor: '#FFEDD5', darkBgColor: '#F9731620', icon: '🟠' },
+    { value: 'urgent', label: 'Urgent', color: '#EF4444', bgColor: '#FEE2E2', darkBgColor: '#EF444420', icon: '🔴' }
   ];
+
+  useEffect(() => {
+    fetchLeads();
+    
+    // Check theme
+    const isDark = document.body.classList.contains('dark-theme');
+    setIsDarkTheme(isDark);
+    
+    const observer = new MutationObserver(() => {
+      setIsDarkTheme(document.body.classList.contains('dark-theme'));
+    });
+    observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    
+    return () => observer.disconnect();
+  }, []);
 
   const fetchLeads = useCallback(async () => {
     setLoading(true);
@@ -117,28 +140,27 @@ const Leads = () => {
   }, [fetchLeads]);
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  try {
-    const token = localStorage.getItem('token');
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
-    
-    // Auto-assign lead to current user
-    const leadWithAssignee = {
-      ...formData,
-      assignedTo: user.id
-    };
-    
-    await axios.post('https://future-fs-o2.onrender.com/api/leads', leadWithAssignee, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    toast.success('Lead created successfully');
-    setShowModal(false);
-    setFormData({ firstName: '', lastName: '', email: '', phone: '', company: '', jobTitle: '', value: 0, status: 'new', priority: 'medium', leadSource: 'website' });
-    fetchLeads();
-  } catch (error) {
-    toast.error('Failed to create lead');
-  }
-};
+    e.preventDefault();
+    try {
+      const token = localStorage.getItem('token');
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      
+      const leadWithAssignee = {
+        ...formData,
+        assignedTo: user.id
+      };
+      
+      await axios.post('https://future-fs-o2.onrender.com/api/leads', leadWithAssignee, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      toast.success('Lead created successfully');
+      setShowModal(false);
+      setFormData({ firstName: '', lastName: '', email: '', phone: '', company: '', jobTitle: '', value: 0, status: 'new', priority: 'medium', leadSource: 'website' });
+      fetchLeads();
+    } catch (error) {
+      toast.error('Failed to create lead');
+    }
+  };
 
   const handleUpdate = async (e) => {
     e.preventDefault();
@@ -186,19 +208,48 @@ const Leads = () => {
     }
   };
 
-  // Priority Badge Component
+  // Priority Badge Component with dark mode support
   const PriorityBadge = ({ priority }) => {
     const option = priorityOptions.find(p => p.value === priority);
+    const bgColor = isDarkTheme ? option?.darkBgColor : option?.bgColor;
     return (
       <span style={{
-        background: option?.bgColor || '#f0f0f0',
+        background: bgColor || '#f0f0f0',
         color: option?.color || '#666',
         padding: '4px 12px',
         borderRadius: '20px',
         fontSize: '11px',
-        fontWeight: '600'
+        fontWeight: '600',
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: '4px'
       }}>
+        <span>{option?.icon}</span>
         {option?.label}
+      </span>
+    );
+  };
+
+  // Value Badge Component with dark mode support
+  const ValueBadge = ({ value, status }) => {
+    const isWon = status === 'won';
+    const bgColor = isDarkTheme ? (isWon ? '#05966920' : '#10B98120') : (isWon ? '#D1FAE5' : '#D1FAE5');
+    const textColor = isWon ? '#059669' : '#10B981';
+    
+    return (
+      <span style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: '4px',
+        fontSize: '13px',
+        fontWeight: '600',
+        color: textColor,
+        background: bgColor,
+        padding: '4px 10px',
+        borderRadius: '20px'
+      }}>
+        <FiDollarSign size={12} />
+        ${value?.toLocaleString()}
       </span>
     );
   };
@@ -208,8 +259,8 @@ const Leads = () => {
       <div className="fade-in">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', flexWrap: 'wrap', gap: '1rem' }}>
           <div>
-            <h1 style={{ fontSize: '2rem', fontWeight: '700', marginBottom: '0.5rem', color: 'black' }}>Leads</h1>
-            <p style={{ color: 'rgba(11, 11, 11, 0.9)' }}>Manage and track all your sales leads</p>
+            <h1 style={{ fontSize: '2rem', fontWeight: '700', marginBottom: '0.5rem', color: 'white' }}>Leads</h1>
+            <p style={{ color: 'rgba(255,255,255,0.9)' }}>Manage and track all your sales leads</p>
           </div>
           <button className="btn-primary" onClick={() => setShowModal(true)}>
             <FiPlus style={{ marginRight: '8px', verticalAlign: 'middle' }} />
@@ -220,7 +271,7 @@ const Leads = () => {
         {/* Search Bar */}
         <div className="card" style={{ marginBottom: '2rem' }}>
           <div style={{ position: 'relative' }}>
-            <FiSearch style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: '#FF6B35' }} />
+            <FiSearch style={{ position: 'absolute', left: '16px', top: '50%', transform: 'translateY(-50%)', color: '#8B5CF6' }} />
             <input
               type="text"
               className="input-modern"
@@ -247,7 +298,7 @@ const Leads = () => {
               return (
                 <div key={lead._id} className="card" style={{
                   transition: 'all 0.2s ease',
-                  border: '1px solid rgba(0,0,0,0.05)',
+                  border: isDarkTheme ? '1px solid rgba(255,255,255,0.1)' : '1px solid rgba(0,0,0,0.05)',
                   position: 'relative',
                   zIndex: isDropdownOpen ? 1000 : 1
                 }}>
@@ -255,7 +306,7 @@ const Leads = () => {
                     {/* Lead Info */}
                     <div style={{ flex: 1 }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap', marginBottom: '8px' }}>
-                        <h3 style={{ fontSize: '18px', fontWeight: '700', color: '#1a1f36' }}>
+                        <h3 style={{ fontSize: '18px', fontWeight: '700', color: isDarkTheme ? '#ffffff' : '#1a1f36' }}>
                           {lead.firstName} {lead.lastName}
                         </h3>
                         <PriorityBadge priority={lead.priority} />
@@ -284,37 +335,130 @@ const Leads = () => {
                             {currentOption?.label}
                             <FiChevronDown size={12} style={{ opacity: 0.8 }} />
                           </button>
+                          
+                          {isDropdownOpen && (
+                            <>
+                              <div 
+                                style={{
+                                  position: 'fixed',
+                                  top: 0,
+                                  left: 0,
+                                  right: 0,
+                                  bottom: 0,
+                                  zIndex: 9998,
+                                  backgroundColor: 'rgba(0,0,0,0)'
+                                }}
+                                onClick={() => setOpenStatusDropdown(null)}
+                              />
+                              <div style={{
+                                position: 'absolute',
+                                top: 'calc(100% + 5px)',
+                                left: 0,
+                                background: isDarkTheme ? '#1a1a2e' : 'white',
+                                borderRadius: '16px',
+                                boxShadow: '0 10px 40px rgba(0,0,0,0.25)',
+                                minWidth: '280px',
+                                zIndex: 9999,
+                                overflow: 'hidden',
+                                border: `1px solid ${isDarkTheme ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)'}`
+                              }}>
+                                {statusOptions.map((option) => {
+                                  const OptionIcon = option.icon;
+                                  return (
+                                    <button
+                                      key={option.value}
+                                      onClick={() => {
+                                        handleStatusChange(lead._id, option.value);
+                                      }}
+                                      style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: '12px',
+                                        width: '100%',
+                                        padding: '12px 16px',
+                                        background: lead.status === option.value ? (isDarkTheme ? option.darkBgColor : option.bgColor) : (isDarkTheme ? 'rgba(255,255,255,0.05)' : 'white'),
+                                        border: 'none',
+                                        borderBottom: `1px solid ${isDarkTheme ? 'rgba(255,255,255,0.05)' : '#f0f0f0'}`,
+                                        cursor: 'pointer',
+                                        transition: 'all 0.2s ease',
+                                        textAlign: 'left'
+                                      }}
+                                      onMouseEnter={(e) => {
+                                        e.currentTarget.style.background = isDarkTheme ? 'rgba(255,255,255,0.1)' : '#f9fafb';
+                                      }}
+                                      onMouseLeave={(e) => {
+                                        e.currentTarget.style.background = lead.status === option.value ? (isDarkTheme ? option.darkBgColor : option.bgColor) : (isDarkTheme ? 'rgba(255,255,255,0.05)' : 'white');
+                                      }}
+                                    >
+                                      <div style={{
+                                        width: '36px',
+                                        height: '36px',
+                                        background: option.gradient,
+                                        borderRadius: '12px',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        color: 'white',
+                                        boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                                      }}>
+                                        <OptionIcon size={16} />
+                                      </div>
+                                      <div style={{ flex: 1 }}>
+                                        <div style={{ 
+                                          fontWeight: '600', 
+                                          fontSize: '14px', 
+                                          color: isDarkTheme ? '#ffffff' : '#1a1f36',
+                                          display: 'flex',
+                                          alignItems: 'center',
+                                          gap: '8px'
+                                        }}>
+                                          {option.label}
+                                          {lead.status === option.value && (
+                                            <span style={{ 
+                                              fontSize: '10px', 
+                                              background: option.gradient, 
+                                              color: 'white',
+                                              padding: '2px 8px',
+                                              borderRadius: '20px'
+                                            }}>
+                                              Current
+                                            </span>
+                                          )}
+                                        </div>
+                                        <div style={{ fontSize: '11px', color: isDarkTheme ? 'rgba(255,255,255,0.6)' : '#9CA3AF', marginTop: '2px' }}>
+                                          {option.description}
+                                        </div>
+                                      </div>
+                                      {lead.status === option.value && (
+                                        <div style={{ color: option.color, fontSize: '14px' }}>✓</div>
+                                      )}
+                                    </button>
+                                  );
+                                })}
+                              </div>
+                            </>
+                          )}
                         </div>
                       </div>
                       
                       <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginBottom: '8px' }}>
-                        <span style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '14px', color: '#4a5568' }}>
+                        <span style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '14px', color: isDarkTheme ? 'rgba(255,255,255,0.7)' : '#4a5568' }}>
                           <FiMail size={14} /> {lead.email}
                         </span>
                         {lead.phone && (
-                          <span style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '14px', color: '#4a5568' }}>
+                          <span style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '14px', color: isDarkTheme ? 'rgba(255,255,255,0.7)' : '#4a5568' }}>
                             <FiPhone size={14} /> {lead.phone}
                           </span>
                         )}
                         {lead.value > 0 && (
-                          <span style={{ 
-                            display: 'flex', 
-                            alignItems: 'center', 
-                            gap: '4px', 
-                            fontSize: '14px', 
-                            fontWeight: '700', 
-                            color: lead.status === 'won' ? '#059669' : '#10B981',
-                            background: '#D1FAE5',
-                            padding: '2px 8px',
-                            borderRadius: '20px'
-                          }}>
-                            <FiDollarSign size={14} /> ${lead.value.toLocaleString()}
-                          </span>
+                          <ValueBadge value={lead.value} status={lead.status} />
                         )}
                       </div>
                       
                       {lead.company && (
-                        <p style={{ fontSize: '13px', color: '#718096' }}>{lead.company} {lead.jobTitle && `• ${lead.jobTitle}`}</p>
+                        <p style={{ fontSize: '13px', color: isDarkTheme ? 'rgba(255,255,255,0.5)' : '#718096' }}>
+                          {lead.company} {lead.jobTitle && `• ${lead.jobTitle}`}
+                        </p>
                       )}
                     </div>
                     
@@ -324,8 +468,9 @@ const Leads = () => {
                         className="btn-secondary"
                         style={{ 
                           padding: '8px 12px', 
-                          background: 'rgba(255, 107, 53, 0.1)',
-                          borderColor: 'rgba(255, 107, 53, 0.2)'
+                          background: isDarkTheme ? 'rgba(255,255,255,0.1)' : 'rgba(255, 107, 53, 0.1)',
+                          borderColor: isDarkTheme ? 'rgba(255,255,255,0.2)' : 'rgba(255, 107, 53, 0.2)',
+                          color: isDarkTheme ? '#ffffff' : '#6D28D9'
                         }}
                         onClick={() => {
                           setEditingLead(lead);
@@ -336,130 +481,31 @@ const Leads = () => {
                       </button>
                       <button
                         className="btn-secondary"
-                        style={{ padding: '8px 12px', color: '#EF4444', borderColor: 'rgba(239, 68, 68, 0.2)' }}
+                        style={{ 
+                          padding: '8px 12px', 
+                          color: '#EF4444', 
+                          borderColor: isDarkTheme ? 'rgba(239, 68, 68, 0.3)' : 'rgba(239, 68, 68, 0.2)',
+                          background: isDarkTheme ? 'rgba(239, 68, 68, 0.1)' : 'transparent'
+                        }}
                         onClick={() => handleDelete(lead._id)}
                       >
                         <FiTrash2 />
                       </button>
                     </div>
                   </div>
-
-                  {/* Dropdown Menu */}
-                  {isDropdownOpen && (
-                    <>
-                      <div 
-                        style={{
-                          position: 'fixed',
-                          top: 0,
-                          left: 0,
-                          right: 0,
-                          bottom: 0,
-                          zIndex: 9998,
-                          backgroundColor: 'rgba(0,0,0,0)'
-                        }}
-                        onClick={() => setOpenStatusDropdown(null)}
-                      />
-                      <div style={{
-                        position: 'absolute',
-                        top: 'calc(100% + 5px)',
-                        left: 0,
-                        background: 'white',
-                        borderRadius: '16px',
-                        boxShadow: '0 10px 40px rgba(0,0,0,0.25)',
-                        minWidth: '280px',
-                        zIndex: 9999,
-                        overflow: 'hidden',
-                        border: '1px solid rgba(0,0,0,0.1)'
-                      }}>
-                        {statusOptions.map((option) => {
-                          const OptionIcon = option.icon;
-                          return (
-                            <button
-                              key={option.value}
-                              onClick={() => {
-                                handleStatusChange(lead._id, option.value);
-                              }}
-                              style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '12px',
-                                width: '100%',
-                                padding: '12px 16px',
-                                background: lead.status === option.value ? option.bgColor : 'white',
-                                border: 'none',
-                                borderBottom: '1px solid #f0f0f0',
-                                cursor: 'pointer',
-                                transition: 'all 0.2s ease',
-                                textAlign: 'left'
-                              }}
-                              onMouseEnter={(e) => {
-                                e.currentTarget.style.background = '#f9fafb';
-                              }}
-                              onMouseLeave={(e) => {
-                                e.currentTarget.style.background = lead.status === option.value ? option.bgColor : 'white';
-                              }}
-                            >
-                              <div style={{
-                                width: '36px',
-                                height: '36px',
-                                background: option.gradient,
-                                borderRadius: '12px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                color: 'white',
-                                boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-                              }}>
-                                <OptionIcon size={16} />
-                              </div>
-                              <div style={{ flex: 1 }}>
-                                <div style={{ 
-                                  fontWeight: '600', 
-                                  fontSize: '14px', 
-                                  color: '#1a1f36',
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  gap: '8px'
-                                }}>
-                                  {option.label}
-                                  {lead.status === option.value && (
-                                    <span style={{ 
-                                      fontSize: '10px', 
-                                      background: option.gradient, 
-                                      color: 'white',
-                                      padding: '2px 8px',
-                                      borderRadius: '20px'
-                                    }}>
-                                      Current
-                                    </span>
-                                  )}
-                                </div>
-                                <div style={{ fontSize: '11px', color: '#9CA3AF', marginTop: '2px' }}>
-                                  {option.description}
-                                </div>
-                              </div>
-                              {lead.status === option.value && (
-                                <div style={{ color: option.color, fontSize: '14px' }}>✓</div>
-                              )}
-                            </button>
-                          );
-                        })}
-                      </div>
-                    </>
-                  )}
                 </div>
               );
             })}
             
             {leads.length === 0 && (
               <div className="card" style={{ textAlign: 'center', padding: '3rem' }}>
-                <p style={{ color: '#718096' }}>No leads found. Create your first lead!</p>
+                <p style={{ color: isDarkTheme ? 'rgba(255,255,255,0.6)' : '#718096' }}>No leads found. Create your first lead!</p>
               </div>
             )}
           </div>
         )}
 
-        {/* Add Lead Modal */}
+        {/* Add Lead Modal - keep existing modal code */}
         {showModal && (
           <div style={{
             position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
