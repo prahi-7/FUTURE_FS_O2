@@ -32,12 +32,12 @@ const Team = () => {
     try {
       const token = localStorage.getItem('token');
       
-      const membersRes = await axios.get('https://future-fs-o2.onrender.com/api/team/members', {
+      const membersRes = await axios.get('https://future-fs-o2.onrender.com/api/Team/members', {
         headers: { Authorization: `Bearer ${token}` }
       });
       setMembers(membersRes.data);
       
-      const performanceRes = await axios.get('https://future-fs-o2.onrender.com/api/team/performance', {
+      const performanceRes = await axios.get('https://future-fs-o2.onrender.com/api/Team/performance', {
         headers: { Authorization: `Bearer ${token}` }
       });
       setPerformance(performanceRes.data);
@@ -54,7 +54,7 @@ const Team = () => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
-      await axios.post('https://future-fs-o2.onrender.com/api/auth/signup', newMember, {
+      await axios.post('https://future-fs-o2.onrender.com/api/auth/Signup', newMember, {
         headers: { Authorization: `Bearer ${token}` }
       });
       toast.success('Team member added successfully');

@@ -24,7 +24,7 @@ const Dashboard = () => {
   const fetchDashboardData = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('https://future-fs-o2.onrender.com/api/analytics/dashboard', {
+      const response = await axios.get('https://future-fs-o2.onrender.com/api/Analytics/Dashboard', {
         headers: { Authorization: `Bearer ${token}` }
       });
       setAnalytics(response.data);
@@ -126,7 +126,7 @@ const Dashboard = () => {
         <div className="card">
           <h3 style={{ fontSize: 'clamp(16px, 4vw, 18px)', fontWeight: '600', marginBottom: '1rem' }}>Quick Actions</h3>
           <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-            <button className="btn-primary" onClick={() => window.location.href = '/leads'}>
+            <button className="btn-primary" onClick={() => window.location.href = '/Leads'}>
               Add New Lead
             </button>
             <button className="btn-secondary" onClick={() => window.location.href = '/pipeline'}>

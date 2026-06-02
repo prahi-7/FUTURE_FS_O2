@@ -19,7 +19,7 @@ const Signup = () => {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 10000);
       
-      const response = await axios.post('https://future-fs-o2.onrender.com/api/auth/signup', {
+      const response = await axios.post('https://future-fs-o2.onrender.com/api/auth/Signup', {
         name, email, password
       }, {
         signal: controller.signal

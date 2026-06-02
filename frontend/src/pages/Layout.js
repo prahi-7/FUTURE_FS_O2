@@ -31,12 +31,12 @@ const Layout = ({ children }) => {
   }, []);
 
   const menuItems = [
-    { path: '/dashboard', label: 'Dashboard', icon: FiHome },
-    { path: '/leads', label: 'Leads', icon: FiUsers },
+    { path: '/Dashboard', label: 'Dashboard', icon: FiHome },
+    { path: '/Leads', label: 'Leads', icon: FiUsers },
     { path: '/pipeline', label: 'Pipeline', icon: FiPieChart },
-    { path: '/analytics', label: 'Analytics', icon: FiTrendingUp },
-    { path: '/team', label: 'Team', icon: FiUsers },
-    { path: '/settings', label: 'Settings', icon: FiSettings },
+    { path: '/Analytics', label: 'Analytics', icon: FiTrendingUp },
+    { path: '/Team', label: 'Team', icon: FiUsers },
+    { path: '/Settings', label: 'Settings', icon: FiSettings },
   ];
 
   const handleLogout = () => {

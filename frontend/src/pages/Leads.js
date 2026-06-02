@@ -124,7 +124,7 @@ const Leads = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get(`https://future-fs-o2.onrender.com/api/leads?search=${search}`, {
+      const response = await axios.get(`https://future-fs-o2.onrender.com/api/Leads?search=${search}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setLeads(response.data);
@@ -150,7 +150,7 @@ const Leads = () => {
         assignedTo: user.id
       };
       
-      await axios.post('https://future-fs-o2.onrender.com/api/leads', leadWithAssignee, {
+      await axios.post('https://future-fs-o2.onrender.com/api/Leads', leadWithAssignee, {
         headers: { Authorization: `Bearer ${token}` }
       });
       toast.success('Lead created successfully');
@@ -166,7 +166,7 @@ const Leads = () => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
-      await axios.put(`https://future-fs-o2.onrender.com/api/leads/${editingLead._id}`, editingLead, {
+      await axios.put(`https://future-fs-o2.onrender.com/api/Leads/${editingLead._id}`, editingLead, {
         headers: { Authorization: `Bearer ${token}` }
       });
       toast.success('Lead updated successfully');
@@ -181,7 +181,7 @@ const Leads = () => {
   const handleStatusChange = async (leadId, newStatus) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.put(`https://future-fs-o2.onrender.com/api/leads/${leadId}`, 
+      await axios.put(`https://future-fs-o2.onrender.com/api/Leads/${leadId}`, 
         { status: newStatus },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -197,7 +197,7 @@ const Leads = () => {
     if (window.confirm('Are you sure you want to delete this lead?')) {
       try {
         const token = localStorage.getItem('token');
-        await axios.delete(`https://future-fs-o2.onrender.com/api/leads/${id}`, {
+        await axios.delete(`https://future-fs-o2.onrender.com/api/Leads/${id}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         toast.success('Lead deleted successfully');

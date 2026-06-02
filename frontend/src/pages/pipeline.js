@@ -37,7 +37,7 @@ const Pipeline = () => {
   const fetchPipeline = useCallback(async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('https://future-fs-o2.onrender.com/api/leads', {
+      const response = await axios.get('https://future-fs-o2.onrender.com/api/Leads', {
         headers: { Authorization: `Bearer ${token}` }
       });
       
@@ -60,7 +60,7 @@ const Pipeline = () => {
   const updateLeadStatus = async (leadId, newStatus) => {
     try {
       const token = localStorage.getItem('token');
-      await axios.put(`https://future-fs-o2.onrender.com/api/leads/${leadId}`, 
+      await axios.put(`https://future-fs-o2.onrender.com/api/Leads/${leadId}`, 
         { status: newStatus },
         { headers: { Authorization: `Bearer ${token}` } }
       );
