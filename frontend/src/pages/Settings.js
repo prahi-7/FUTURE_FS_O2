@@ -15,6 +15,7 @@ const Settings = () => {
   const [loading, setLoading] = useState(false);
   const [passwordData, setPasswordData] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' });
   const [twoFactorEnabled, setTwoFactorEnabled] = useState(false);
+  const [isDarkTheme, setIsDarkTheme] = useState(false);
 
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem('user') || '{}');
@@ -27,10 +28,20 @@ const Settings = () => {
       position: userData.position || ''
     });
     
-    // Load saved theme from localStorage
     const savedTheme = localStorage.getItem('theme') || 'light';
     setTheme(savedTheme);
     applyTheme(savedTheme);
+    
+    // Check dark mode
+    const isDark = document.body.classList.contains('dark-theme');
+    setIsDarkTheme(isDark);
+    
+    const observer = new MutationObserver(() => {
+      setIsDarkTheme(document.body.classList.contains('dark-theme'));
+    });
+    observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    
+    return () => observer.disconnect();
   }, []);
 
   const applyTheme = (newTheme) => {
@@ -97,6 +108,7 @@ const Settings = () => {
     setTheme(newTheme);
     localStorage.setItem('theme', newTheme);
     applyTheme(newTheme);
+    setIsDarkTheme(newTheme === 'dark');
     toast.success(`${newTheme === 'light' ? 'Light' : 'Dark'} theme activated`);
   };
 
@@ -104,6 +116,9 @@ const Settings = () => {
     setTwoFactorEnabled(!twoFactorEnabled);
     toast.success(twoFactorEnabled ? '2FA disabled' : '2FA enabled (demo)');
   };
+
+  const subTextColor = isDarkTheme ? 'rgba(255,255,255,0.7)' : '#6B7280';
+  const bgColor = isDarkTheme ? 'rgba(255,255,255,0.05)' : '#f9fafb';
 
   return (
     <Layout>
@@ -171,14 +186,14 @@ const Settings = () => {
               </form>
             </div>
 
-            {/* Two-Factor Authentication */}
-            <div style={{ padding: '1rem', background: '#f9fafb', borderRadius: '16px' }}>
+            {/* Two-Factor Authentication - Fixed visibility */}
+            <div style={{ padding: '1rem', background: bgColor, borderRadius: '16px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
                 <div>
                   <h4 style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '16px' }}>
                     <FiSmartphone /> Two-Factor Authentication
                   </h4>
-                  <p style={{ fontSize: '13px', color: '#6B7280', marginTop: '4px' }}>
+                  <p style={{ fontSize: '13px', color: subTextColor, marginTop: '4px' }}>
                     Add an extra layer of security to your account
                   </p>
                 </div>
@@ -200,7 +215,7 @@ const Settings = () => {
             </div>
           </div>
 
-          {/* Notification Settings */}
+          {/* Notification Settings - Fixed visibility */}
           <div className="card">
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '1.5rem' }}>
               <div style={{ background: '#8B5CF615', padding: '10px', borderRadius: '12px' }}>
@@ -209,25 +224,25 @@ const Settings = () => {
               <h3 style={{ fontWeight: '600' }}>Notifications</h3>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              <label style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', padding: '8px', background: '#f9fafb', borderRadius: '12px' }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', padding: '8px', background: bgColor, borderRadius: '12px' }}>
                 <input type="checkbox" checked={notifications.email} onChange={(e) => setNotifications({...notifications, email: e.target.checked})} style={{ width: '18px', height: '18px' }} />
                 <div>
                   <div style={{ fontWeight: '500' }}>Email Notifications</div>
-                  <div style={{ fontSize: '12px', color: '#6B7280' }}>Receive updates via email</div>
+                  <div style={{ fontSize: '12px', color: subTextColor }}>Receive updates via email</div>
                 </div>
               </label>
-              <label style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', padding: '8px', background: '#f9fafb', borderRadius: '12px' }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', padding: '8px', background: bgColor, borderRadius: '12px' }}>
                 <input type="checkbox" checked={notifications.push} onChange={(e) => setNotifications({...notifications, push: e.target.checked})} style={{ width: '18px', height: '18px' }} />
                 <div>
                   <div style={{ fontWeight: '500' }}>Push Notifications</div>
-                  <div style={{ fontSize: '12px', color: '#6B7280' }}>Real-time alerts in your browser</div>
+                  <div style={{ fontSize: '12px', color: subTextColor }}>Real-time alerts in your browser</div>
                 </div>
               </label>
-              <label style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', padding: '8px', background: '#f9fafb', borderRadius: '12px' }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer', padding: '8px', background: bgColor, borderRadius: '12px' }}>
                 <input type="checkbox" checked={notifications.leadAlerts} onChange={(e) => setNotifications({...notifications, leadAlerts: e.target.checked})} style={{ width: '18px', height: '18px' }} />
                 <div>
                   <div style={{ fontWeight: '500' }}>Lead Assignment Alerts</div>
-                  <div style={{ fontSize: '12px', color: '#6B7280' }}>Get notified when leads are assigned to you</div>
+                  <div style={{ fontSize: '12px', color: subTextColor }}>Get notified when leads are assigned to you</div>
                 </div>
               </label>
             </div>

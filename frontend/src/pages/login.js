@@ -15,17 +15,12 @@ const Login = () => {
     setLoading(true);
     
     try {
-      // Add timeout to prevent long waiting
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
-      
+      // Set a shorter timeout for better UX
       const response = await axios.post('https://future-fs-o2.onrender.com/api/auth/login', {
         email, password
       }, {
-        signal: controller.signal
+        timeout: 8000 // 8 second timeout
       });
-      
-      clearTimeout(timeoutId);
       
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('user', JSON.stringify(response.data.user));
@@ -33,10 +28,14 @@ const Login = () => {
       navigate('/dashboard');
       
     } catch (error) {
-      if (error.name === 'AbortError') {
-        toast.error('Request timeout. Please try again.');
+      if (error.code === 'ECONNABORTED') {
+        toast.error('Connection timeout. Please try again.');
+      } else if (error.response?.status === 401) {
+        toast.error('Invalid email or password');
+      } else if (error.response?.data?.error) {
+        toast.error(error.response.data.error);
       } else {
-        toast.error(error.response?.data?.error || 'Login failed');
+        toast.error('Network error. Please check your connection.');
       }
     } finally {
       setLoading(false);
