@@ -33,9 +33,10 @@ const Dashboard = () => {
 
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('https://future-fs-02-pink.vercel.app/api/analytics/dashboard', {
+      // CHANGE THIS TO YOUR RENDER BACKEND URL
+      const response = await axios.get('https://future-fs-o2.onrender.com/api/analytics/dashboard', {
         headers: { Authorization: `Bearer ${token}` },
-        timeout: 10000 // 10 second timeout
+        timeout: 15000
       });
       
       // Store in cache
@@ -44,7 +45,6 @@ const Dashboard = () => {
       console.log('Dashboard data loaded:', response.data);
     } catch (error) {
       console.error('Dashboard error:', error);
-      // Show user-friendly message
       if (error.code === 'ECONNABORTED') {
         toast.error('Server is waking up. Please wait a moment and refresh.');
       } else {
