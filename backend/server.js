@@ -5,10 +5,15 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const app = express();
+const compression = require('compression');
+
 
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+// Add after middleware section
+app.use(compression()); // Compress responses
 
 // ==================== BASIC TEST ROUTES ====================
 

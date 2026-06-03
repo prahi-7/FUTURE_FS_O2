@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
-import { FiUsers, FiDollarSign, FiTrendingUp, FiCheckCircle, FiRefreshCw } from 'react-icons/fi';
+import { FiUsers, FiDollarSign, FiTrendingUp, FiCheckCircle } from 'react-icons/fi';
 import Layout from './Layout';
+import { cache } from '../utils/cache';
 
 const Dashboard = () => {
   const [analytics, setAnalytics] = useState({
@@ -13,7 +14,6 @@ const Dashboard = () => {
   });
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     fetchDashboardData();
@@ -22,25 +22,37 @@ const Dashboard = () => {
   }, []);
 
   const fetchDashboardData = async () => {
+    // Check cache first
+    const cachedData = cache.get('dashboard');
+    if (cachedData) {
+      console.log('Loading from cache');
+      setAnalytics(cachedData);
+      setLoading(false);
+      return;
+    }
+
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('https://future-fs-o2.onrender.com/api/Analytics/Dashboard', {
-        headers: { Authorization: `Bearer ${token}` }
+      const response = await axios.get('https://future-fs-02-pink.vercel.app/api/analytics/dashboard', {
+        headers: { Authorization: `Bearer ${token}` },
+        timeout: 10000 // 10 second timeout
       });
+      
+      // Store in cache
+      cache.set('dashboard', response.data);
       setAnalytics(response.data);
+      console.log('Dashboard data loaded:', response.data);
     } catch (error) {
       console.error('Dashboard error:', error);
-      toast.error('Failed to load dashboard data');
+      // Show user-friendly message
+      if (error.code === 'ECONNABORTED') {
+        toast.error('Server is waking up. Please wait a moment and refresh.');
+      } else {
+        toast.error('Failed to load dashboard data');
+      }
     } finally {
       setLoading(false);
-      setRefreshing(false);
     }
-  };
-
-  const handleRefresh = async () => {
-    setRefreshing(true);
-    await fetchDashboardData();
-    toast.success('Dashboard refreshed!');
   };
 
   const statsCards = [
@@ -56,6 +68,9 @@ const Dashboard = () => {
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '60vh' }}>
           <div className="card" style={{ textAlign: 'center' }}>
             <p>Loading dashboard...</p>
+            <p style={{ fontSize: '12px', color: '#666', marginTop: '10px' }}>
+              First load may take 15-20 seconds as server wakes up
+            </p>
           </div>
         </div>
       </Layout>
@@ -65,68 +80,48 @@ const Dashboard = () => {
   return (
     <Layout>
       <div className="fade-in">
-        <div style={{ 
-          display: 'flex', 
-          justifyContent: 'space-between', 
-          alignItems: 'center', 
-          marginBottom: '1.5rem', 
-          flexWrap: 'wrap', 
-          gap: '1rem' 
-        }}>
-          <div>
-            <h1 style={{ fontSize: 'clamp(1.5rem, 5vw, 2rem)', fontWeight: '700', marginBottom: '0.5rem', color: 'black' }}>
-              Welcome back, {user?.name?.split(' ')[0] || 'User'}! 👋
-            </h1>
-            <p style={{ color: 'rgba(19, 18, 18, 0.9)', fontSize: 'clamp(0.875rem, 4vw, 1rem)' }}>
-              You have {analytics.totalLeads} lead{analytics.totalLeads !== 1 ? 's' : ''} in your pipeline
-            </p>
-          </div>
-          <button 
-            onClick={handleRefresh} 
-            className="btn-secondary" 
-            style={{ display: 'flex', alignItems: 'center', gap: '8px' }} 
-            disabled={refreshing}
-          >
-            <FiRefreshCw style={{ animation: refreshing ? 'spin 1s linear infinite' : 'none' }} />
-            {refreshing ? 'Refreshing...' : 'Refresh'}
-          </button>
+        <div style={{ marginBottom: '2rem' }}>
+          <h1 style={{ fontSize: '2rem', fontWeight: '700', marginBottom: '0.5rem', color: 'white' }}>
+            Welcome back, {user?.name?.split(' ')[0] || 'User'}! 👋
+          </h1>
+          <p style={{ color: 'rgba(255,255,255,0.9)' }}>
+            You have {analytics.totalLeads} lead{analytics.totalLeads !== 1 ? 's' : ''} in your pipeline
+          </p>
         </div>
 
-        {/* Stats Grid - Responsive */}
         <div style={{ 
           display: 'grid', 
-          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', 
-          gap: '1rem',
-          marginBottom: '1.5rem'
+          gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', 
+          gap: '1.5rem',
+          marginBottom: '2rem'
         }}>
           {statsCards.map((stat, index) => {
             const Icon = stat.icon;
             return (
               <div key={index} className="card">
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
                   <div style={{ 
                     background: `${stat.color}15`, 
-                    padding: '10px', 
-                    borderRadius: '12px',
+                    padding: '12px', 
+                    borderRadius: '16px',
                     display: 'inline-flex'
                   }}>
-                    <Icon style={{ color: stat.color, fontSize: 'clamp(20px, 5vw, 24px)' }} />
+                    <Icon style={{ color: stat.color, fontSize: '24px' }} />
                   </div>
                 </div>
-                <h3 style={{ fontSize: 'clamp(22px, 6vw, 28px)', fontWeight: '700', marginBottom: '0.25rem' }}>
+                <h3 style={{ fontSize: '28px', fontWeight: '700', marginBottom: '0.5rem' }}>
                   {stat.value}
                 </h3>
-                <p style={{ color: '#6B7280', fontWeight: '500', fontSize: 'clamp(12px, 3vw, 14px)' }}>{stat.title}</p>
+                <p style={{ color: '#6B7280', fontWeight: '500' }}>{stat.title}</p>
               </div>
             );
           })}
         </div>
 
-        {/* Quick Actions */}
         <div className="card">
-          <h3 style={{ fontSize: 'clamp(16px, 4vw, 18px)', fontWeight: '600', marginBottom: '1rem' }}>Quick Actions</h3>
-          <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-            <button className="btn-primary" onClick={() => window.location.href = '/Leads'}>
+          <h3 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '1rem' }}>Quick Actions</h3>
+          <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+            <button className="btn-primary" onClick={() => window.location.href = '/leads'}>
               Add New Lead
             </button>
             <button className="btn-secondary" onClick={() => window.location.href = '/pipeline'}>
@@ -135,21 +130,6 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
-
-      <style>
-        {`
-          @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-          }
-          
-          @media (max-width: 768px) {
-            .card {
-              padding: 1rem;
-            }
-          }
-        `}
-      </style>
     </Layout>
   );
 };
