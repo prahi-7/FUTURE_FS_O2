@@ -21,14 +21,22 @@ app.get('/test', (req, res) => {
 });
 
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'OK', message: 'Backend running on port 5003' });
+  res.json({ status: 'OK', message: 'Backend running' });
 });
 
-// ==================== MONGODB CONNECTION ====================
+// ==================== OPTIMIZED MONGODB ATLAS CONNECTION ====================
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://p:p7@ac-rbm47nx-shard-00-00.rwnfwzo.mongodb.net:27017,ac-rbm47nx-shard-00-01.rwnfwzo.mongodb.net:27017,ac-rbm47nx-shard-00-02.rwnfwzo.mongodb.net:27017/?ssl=true&replicaSet=atlas-ajxob2-shard-0&authSource=admin&appName=Cluster2';
 
-mongoose.connect('mongodb://p:p7@ac-rbm47nx-shard-00-00.rwnfwzo.mongodb.net:27017,ac-rbm47nx-shard-00-01.rwnfwzo.mongodb.net:27017,ac-rbm47nx-shard-00-02.rwnfwzo.mongodb.net:27017/?ssl=true&replicaSet=atlas-ajxob2-shard-0&authSource=admin&appName=Cluster2')
-  .then(() => console.log('✅ MongoDB connected'))
-  .catch(err => console.log('❌ MongoDB error:', err.message));
+mongoose.connect(MONGODB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  serverSelectionTimeoutMS: 5000,
+  socketTimeoutMS: 45000,
+  maxPoolSize: 10, // Connection pool for faster responses
+  minPoolSize: 2
+})
+.then(() => console.log('✅ MongoDB Atlas connected'))
+.catch(err => console.log('❌ MongoDB error:', err.message));
 
 // ==================== MODELS ====================
 
@@ -40,6 +48,9 @@ const userSchema = new mongoose.Schema({
   role: { type: String, enum: ['admin', 'manager', 'rep'], default: 'rep' },
   createdAt: { type: Date, default: Date.now }
 });
+
+// Add index for faster queries
+userSchema.index({ email: 1 });
 
 userSchema.pre('save', async function(next) {
   if (!this.isModified('password')) return next();
@@ -78,6 +89,11 @@ const leadSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now }
 });
+
+// Add indexes for faster queries
+leadSchema.index({ status: 1 });
+leadSchema.index({ assignedTo: 1 });
+leadSchema.index({ createdAt: -1 });
 
 const Lead = mongoose.model('Lead', leadSchema);
 
@@ -148,7 +164,7 @@ app.post('/api/auth/login', async (req, res) => {
   }
 });
 
-// AUTO-FIX: Assign all unassigned leads to current user when they login
+// AUTO-FIX: Assign all unassigned leads to current user
 app.post('/api/auth/fix-my-leads', authMiddleware, async (req, res) => {
   try {
     const result = await Lead.updateMany(
@@ -237,7 +253,7 @@ app.get('/api/leads', authMiddleware, async (req, res) => {
       ];
     }
     
-    const leads = await Lead.find(query).populate('assignedTo', 'name email').sort({ createdAt: -1 });
+    const leads = await Lead.find(query).populate('assignedTo', 'name email').sort({ createdAt: -1 }).limit(100);
     res.json(leads);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -276,37 +292,24 @@ app.delete('/api/leads/:id', authMiddleware, async (req, res) => {
   }
 });
 
-// ==================== ANALYTICS ROUTES ====================
+// ==================== ANALYTICS ROUTES (OPTIMIZED) ====================
 
 app.get('/api/analytics/dashboard', authMiddleware, async (req, res) => {
   try {
-    const totalLeads = await Lead.countDocuments();
-    const convertedLeads = await Lead.countDocuments({ status: 'won' });
-    const pipelineResult = await Lead.aggregate([
-      { 
-        $match: { 
-          status: { $nin: ['won', 'lost'] } 
-        } 
-      },
-      {
-        $group: {
-          _id: null,
-          total: { $sum: '$value' }
-        }
-      }
+    // Run queries in parallel for faster response
+    const [totalLeads, convertedLeads, pipelineResult, leadsByStatus] = await Promise.all([
+      Lead.countDocuments(),
+      Lead.countDocuments({ status: 'won' }),
+      Lead.aggregate([
+        { $match: { status: { $nin: ['won', 'lost'] } } },
+        { $group: { _id: null, total: { $sum: '$value' } } }
+      ]),
+      Lead.aggregate([
+        { $group: { _id: '$status', count: { $sum: 1 }, totalValue: { $sum: '$value' } } }
+      ])
     ]);
+    
     const pipelineValue = pipelineResult[0]?.total || 0;
-    
-    const leadsByStatus = await Lead.aggregate([
-      { 
-        $group: { 
-          _id: '$status', 
-          count: { $sum: 1 },
-          totalValue: { $sum: '$value' }
-        } 
-      }
-    ]);
-    
     const conversionRate = totalLeads > 0 ? ((convertedLeads / totalLeads) * 100).toFixed(1) : 0;
     
     res.json({
@@ -325,7 +328,7 @@ app.get('/api/analytics/dashboard', authMiddleware, async (req, res) => {
 
 app.get('/api/team/members', authMiddleware, async (req, res) => {
   try {
-    const members = await User.find().select('-password');
+    const members = await User.find().select('-password').limit(50);
     res.json(members);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -334,10 +337,10 @@ app.get('/api/team/members', authMiddleware, async (req, res) => {
 
 app.get('/api/team/performance', authMiddleware, async (req, res) => {
   try {
-    const users = await User.find().select('name email role');
+    const users = await User.find().select('name email role').limit(50);
     
     const performance = await Promise.all(users.map(async (user) => {
-      const leads = await Lead.find({ assignedTo: user._id });
+      const leads = await Lead.find({ assignedTo: user._id }).limit(1000);
       const converted = leads.filter(l => l.status === 'won').length;
       const totalValue = leads.reduce((sum, l) => sum + (l.value || 0), 0);
       
@@ -358,27 +361,15 @@ app.get('/api/team/performance', authMiddleware, async (req, res) => {
   }
 });
 
-// ==================== DEBUG ROUTES ====================
-
-app.get('/api/debug/me', authMiddleware, async (req, res) => {
-  try {
-    const user = await User.findById(req.userId).select('-password');
-    res.json(user);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
 // ==================== START SERVER ====================
 
-const PORT = 5003;
+const PORT = process.env.PORT || 5003;
 
 app.listen(PORT, () => {
   console.log(`\n🚀 ========================================`);
   console.log(`   LeadNest CRM Backend Running`);
   console.log(`   ========================================`);
   console.log(`   Server: http://localhost:${PORT}`);
-  console.log(`   Test:   http://localhost:${PORT}/test`);
   console.log(`   Health: http://localhost:${PORT}/api/health`);
   console.log(`   ========================================\n`);
 });
